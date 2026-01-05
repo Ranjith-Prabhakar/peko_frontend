@@ -1,32 +1,37 @@
 import { io, type Socket } from "socket.io-client";
 
-
 let socket: Socket | null = null;
 
 export function connectSocket(id?: string) {
-  // console.log("inside socket userId", userId);
   if (!socket) {
-    socket = io(import.meta.env.VITE_API_BASE_URL_SOCKET!, {
+    socket = io(import.meta.env.VITE_API_SOCKET_URL!, {
       withCredentials: true,
       auth: { id },
     });
 
     socket.on("connect", () => {
-      // console.log("Connected to socket server:", socket?.id);
+      console.log("Connected to socket server:", socket?.id);
     });
 
     socket.on("disconnect", () => {
-      // console.log("Socket disconnected");
-      socket = null; // reset socket on disconnect
+      console.log("Socket disconnected");
+      socket = null;
     });
 
-    socket.on("message", () => {
-      // console.log("Received message from server:", msg);
+    socket.on("welcome", (msg) => {
+      console.log("Server says:", msg);
     });
 
-    socket.on("seatUpdated", (data) => {
-      // setLocalStorageElement("current-event", data.event);
-      // store.dispatch(setEvent(data.event));
+    socket.on("your-id", (id) => {
+      console.log("My socket ID:", id);
+    });
+
+    socket.on("user-disconnected", (id) => {
+      console.log("User disconnected:", id);
+    });
+
+    socket.on("message", (msg) => {
+      console.log("Received message:", msg);
     });
   }
 

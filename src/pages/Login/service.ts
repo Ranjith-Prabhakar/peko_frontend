@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import type { NavigateFunction } from "react-router-dom";
 import { store } from "../../store";
 import { setCredentials } from "../../store/features/auth/authSlice";
+import { connectSocket } from "../../socket/socket";
 
 type LoginPayload = {
   email: string;
@@ -25,7 +26,6 @@ export async function submitLogin(
 
     setLoading(false);
 
-    console.log("Login Result:", result);
     if (result.status === 200) {
       const { accessToken, user } = result.data.data;
       store.dispatch(
@@ -34,6 +34,7 @@ export async function submitLogin(
           data: user,
         })
       );
+      connectSocket(user.id);
       clearFields();
       toast.success("User login successful.");
       navigate("/");
