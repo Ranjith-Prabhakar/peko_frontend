@@ -1,29 +1,27 @@
 import { store } from "../store";
 import { setCredentials } from "../store/features/auth/authSlice";
 import { refreshAccessToken } from "../services/authService";
+import type { AuthResponse } from "../types/auth.types";
 
 export const ensureAccessToken = async () => {
   const state = store.getState();
 
-  const accessToken = state.auth.accessToken;
-  const user = state.auth.user;
+  const { accessToken, user } = state.auth;
 
   if (accessToken && user) return accessToken;
 
   try {
     const response = await refreshAccessToken();
+    const { accessToken: newAccessToken, data } = response as AuthResponse;
 
-    const { accessToken: newToken, user: refreshedUser } = response;
-
-    if (newToken) {
-      store.dispatch(
-  setCredentials({ accessToken: newToken, data: refreshedUser })
-);
-      return newToken;
+    if (newAccessToken) {
+      console.log("updating state====>");
+      store.dispatch(setCredentials({ accessToken: newAccessToken, data }));
+      return newAccessToken;
     }
 
     return null;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

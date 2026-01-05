@@ -1,8 +1,12 @@
 import FormInput from "../../components/ui/FormInput";
 import SubmitButton from "../../components/ui/SubmitButton";
+import useGetUser from "../../hooks/useGetUser";
 import { useRegisterForm } from "./hook";
 
 const Index = () => {
+  const user = useGetUser();
+
+  console.log("login====>", user);
   const {
     email,
     emailError,
