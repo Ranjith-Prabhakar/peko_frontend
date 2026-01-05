@@ -7,6 +7,7 @@ import GuestOnlyRoute from "./GuestOnlyRoute";
 
 const Login = lazy(() => import("../pages/Login"));
 const Register = lazy(() => import("../pages/Register"));
+const NotFoundPage = lazy(() => import("../pages/NotFound"));
 
 const AppRouter = () => {
   return (
@@ -32,6 +33,7 @@ const AppRouter = () => {
               </GuestOnlyRoute>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
         <Toaster
