@@ -20,10 +20,12 @@ export async function submitLogin(
 
     const result = await axios.post("/auth/login", payLoad, {
       withCredentials: true,
+      requiresAuth: false,
     });
 
     setLoading(false);
 
+    console.log("Login Result:", result);
     if (result.status === 200) {
       const { accessToken, user } = result.data.data;
       store.dispatch(
@@ -36,11 +38,16 @@ export async function submitLogin(
       toast.success("User login successful.");
       navigate("/");
     } else {
+      console.log("Login Error: ----");
       toast.error(result.data.message || "Something went wrong.");
     }
-  } catch (error) {
+  } catch (error:any) {
     clearFields();
     setLoading(false);
+    if(error.status === 401) {
+      toast.error("Invalid email or password.");
+      return;
+    }
     toast.error("Something went wrong.");
   }
 }
