@@ -1,6 +1,8 @@
 import axios from "../../api/axiosInstance";
 import toast from "react-hot-toast";
 import type { NavigateFunction } from "react-router-dom";
+import { store } from "../../store";
+import { setCredentials } from "../../store/features/auth/authSlice";
 
 type LoginPayload = {
   email: string;
@@ -23,6 +25,13 @@ export async function submitLogin(
     setLoading(false);
 
     if (result.status === 200) {
+      const { accessToken, user } = result.data.data;
+      store.dispatch(
+        setCredentials({
+          accessToken,
+          data: user,
+        })
+      );
       clearFields();
       toast.success("User login successful.");
       navigate("/");
