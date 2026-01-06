@@ -45,8 +45,12 @@ const AppRouter = () => {
             element={<AuthRedirect />}
           />
 
+          <Route
+            element={<AuthProtectedRoute allowedRoles={["admin", "user"]} />}
+          >
+            <Route path="/logout" element={<Logout />} />
+          </Route>
           <Route element={<AuthProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/logout" element={<Logout />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminReports />} />
               <Route path="reports" element={<AdminReports />} />
