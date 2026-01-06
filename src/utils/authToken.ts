@@ -8,10 +8,8 @@ export const ensureAccessToken = async () => {
   const state = store.getState();
   const { accessToken, user } = state.auth;
 
-  if (accessToken && user) {
-    connectSocket(user.id);
-    return accessToken;
-  }
+  if (accessToken && user)  return accessToken;
+ 
 
   try {
     const response = await refreshAccessToken();

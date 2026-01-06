@@ -2,11 +2,13 @@ import { io, type Socket } from "socket.io-client";
 
 let socket: Socket | null = null;
 
-export function connectSocket(id?: string) {
+export function connectSocket(accessToken: string) {
   if (!socket) {
     socket = io(import.meta.env.VITE_API_SOCKET_URL!, {
       withCredentials: true,
-      auth: { id },
+      auth: {
+        token: accessToken,
+      },
     });
 
     socket.on("connect", () => {
@@ -18,27 +20,11 @@ export function connectSocket(id?: string) {
       socket = null;
     });
 
-    socket.on("welcome", (msg) => {
-      console.log("Server says:", msg);
-    });
-
-    socket.on("your-id", (id) => {
-      console.log("My socket ID:", id);
-    });
-
-    socket.on("user-disconnected", (id) => {
-      console.log("User disconnected:", id);
-    });
-
     socket.on("message", (msg) => {
       console.log("Received message:", msg);
     });
   }
 
-  return socket;
-}
-
-export function getSocket(): Socket | null {
   return socket;
 }
 

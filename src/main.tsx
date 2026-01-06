@@ -5,11 +5,13 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 import { ensureAccessToken } from "./utils/authToken";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import SocketProvider from "./providers/SocketProvider";
 
 (async () => {
   await ensureAccessToken();
   createRoot(document.getElementById("root")!).render(
     <Provider store={store}>
+      <SocketProvider />
       <ErrorBoundary>
         <AppRouter />
       </ErrorBoundary>

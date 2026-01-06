@@ -89,7 +89,6 @@ import type {
 import { store } from "../store";
 import { setCredentials } from "../store/features/auth/authSlice";
 import type { AuthResponse } from "../types/auth.types";
-import { connectSocket } from "../socket/socket";
 
 type FailedQueueItem = {
   resolve: (token: string) => void;
@@ -170,7 +169,6 @@ export const setupResponseInterceptors = (
           })
         );
 
-        connectSocket(user.id);
         apiInstance.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
         processQueue(null, accessToken);
