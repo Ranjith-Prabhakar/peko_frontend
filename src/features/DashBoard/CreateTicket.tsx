@@ -1,21 +1,17 @@
 import { Formik } from "formik";
 import { createTicketValidationSchema } from "../../validations/ticket.validation";
 import { useUserDashBoardContext } from "../../pages/UserDashBoard/provider/UserDashBoardProvider";
+import type { TicketFormValues } from "../../types/ticket";
+import { createToken } from "../../services/ticket/create";
 
 
-interface FormValues {
-  title: string;
-  description: string;
-  category: number | "";
-  priority: "low" | "medium" | "high";
-}
 
 const CreateTicket = () => {
   const {categories} =useUserDashBoardContext();
-  const initialValues: FormValues = {
+  const initialValues: TicketFormValues = {
     title: "",
     description: "",
-    category: "",
+    categoryId: "",
     priority: "medium",
   };
 
@@ -28,8 +24,9 @@ const CreateTicket = () => {
           initialValues={initialValues}
           validationSchema={createTicketValidationSchema}
           validateOnMount
-          onSubmit={(values) => {
+          onSubmit={async(values) => {
             console.log("Form Payload:", values);
+            await createToken(values);
           }}
         >
           {(formik) => (
@@ -81,11 +78,11 @@ const CreateTicket = () => {
                 <legend className="fieldset-legend">Category</legend>
                 <select
                   className={`select select-bordered ${
-                    formik.touched.category && formik.errors.category
+                    formik.touched.categoryId && formik.errors.categoryId
                       ? "select-error"
                       : ""
                   }`}
-                  {...formik.getFieldProps("category")}
+                  {...formik.getFieldProps("categoryId")}
                 >
                   <option value="" disabled>
                     Select category
@@ -96,9 +93,9 @@ const CreateTicket = () => {
                     </option>
                   ))}
                 </select>
-                {formik.touched.category && formik.errors.category && (
+                {formik.touched.categoryId && formik.errors.categoryId && (
                   <p className="label text-error">
-                    {formik.errors.category}
+                    {formik.errors.categoryId}
                   </p>
                 )}
               </fieldset>

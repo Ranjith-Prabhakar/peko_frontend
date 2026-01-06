@@ -1,6 +1,6 @@
 import { store } from "../store";
 import { setCredentials } from "../store/features/auth/authSlice";
-import { refreshAccessToken } from "../services/authService";
+import { refreshAccessToken } from "../services/auth/authService";
 import type { AuthResponse } from "../types/auth.types";
 import { connectSocket } from "../socket/socket";
 

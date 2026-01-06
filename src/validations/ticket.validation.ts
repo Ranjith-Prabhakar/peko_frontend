@@ -9,7 +9,7 @@ export const createTicketValidationSchema = Yup.object({
     .min(10, "Description must be at least 10 characters")
     .required("Description is required"),
 
-  category: Yup.number()
+  categoryId: Yup.number()
     .typeError("Please select a category")
     .required("Category is required"),
 

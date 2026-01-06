@@ -1,4 +1,4 @@
-import axios from "../api/axiosInstance";
+import axios from "../../api/axiosInstance";
 export const refreshAccessToken = async () => {
   try {
     const response = await axios.get("/auth/refresh", {
