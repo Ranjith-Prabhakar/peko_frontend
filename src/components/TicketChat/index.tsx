@@ -133,13 +133,14 @@ const TicketChat = ({
 
   const user = useGetUser();
 
-  const toAddress = user?.role === "user" ? `user:${user?.id}` : "role:admin";
+  const toAddress = user?.role === "user" ? "role:admin" : `user:${user?.id}`;
 
   useEffect(() => {
     async function getMessages() {
       try {
         const fetchedMessages = await fetchMessages(ticketId);
-        setMessages(fetchedMessages);
+        console.log("Fetched messages:", fetchedMessages);
+           setMessages(fetchedMessages.data || []); 
       } catch (error) {
         console.error("Failed to fetch messages", error);
       }
@@ -150,6 +151,7 @@ const TicketChat = ({
 
   useEffect(() => {
     const handleIncomingMessage = (message: TicketMessage) => {
+      console.log("Received message via socket:", message);
       setMessages((prev) => [...prev, message]);
     };
 
