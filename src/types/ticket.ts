@@ -9,5 +9,6 @@ export interface TicketMessage {
   ticketId: number;
   message: string;
   senderId: number; 
+  senderName: string; 
   createdAt: string;  
 }

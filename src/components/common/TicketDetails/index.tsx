@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import type { Ticket } from "../../ui/Table/TicketTable/TicketTable";
 import { markTicketViewed, updateTicketStatus } from "../../../services/ticket/update";
-// import TicketChat from "../../TicketChat";
+import TicketChat from "../../TicketChat";
+import useGetUser from "../../../hooks/useGetUser";
 
 interface TicketDetailsProps {
   role: "admin" | "user";
@@ -10,6 +11,7 @@ interface TicketDetailsProps {
 }
 
 const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
+  const user = useGetUser()
   const { state } = useLocation();
   const [ticket, setTicket] = useState<Ticket | null>(initialTicket ?? state?.ticket ?? null);
   const [pendingStatus, setPendingStatus] = useState<Ticket["status"]>(
@@ -116,7 +118,8 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
           </div>
         </div>
 
-        {/* <TicketChat ticketId={ticket.id} role={role} /> */}
+        {/* <TicketChat  /> */}
+        <TicketChat ticketId={ticket.id} currentUserId={Number(user?.id)} currentUserName={user?.name as string} />
       </div>
     </div>
   );

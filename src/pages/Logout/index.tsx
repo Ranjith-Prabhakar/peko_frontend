@@ -6,6 +6,7 @@ import { logoutApi } from "../../services/auth/logout";
 import { logout } from "../../store/features/auth/authSlice";
 import { disconnectSocket } from "../../socket/socket";
 import { clearNotifications } from "../../store/features/notification/notificationSlice";
+import toast from "react-hot-toast";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -21,8 +22,8 @@ const Logout = () => {
         dispatch(logout());
         dispatch(clearNotifications());
         disconnectSocket();
-
-        navigate("/login", { replace: true });
+        toast.success("Logged out successfully");
+        navigate("/login", { replace: true })
       }
     };
 
