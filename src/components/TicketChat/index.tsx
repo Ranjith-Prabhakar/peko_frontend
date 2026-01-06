@@ -111,10 +111,11 @@
 
 // export default TicketChat;
 
-
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { TicketMessage } from "../../types/ticket";
+import { fetchMessages } from "../../services/ticket/fetchMessages";
+import { socket } from "../../socket/socket";
+import useGetUser from "../../hooks/useGetUser";
 
 interface TicketChatProps {
   ticketId: number;
@@ -130,6 +131,35 @@ const TicketChat = ({
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [input, setInput] = useState("");
 
+  const user = useGetUser();
+
+  const toAddress = user?.role === "user" ? `user:${user?.id}` : "role:admin";
+
+  useEffect(() => {
+    async function getMessages() {
+      try {
+        const fetchedMessages = await fetchMessages(ticketId);
+        setMessages(fetchedMessages);
+      } catch (error) {
+        console.error("Failed to fetch messages", error);
+      }
+    }
+
+    getMessages();
+  }, [ticketId]);
+
+  useEffect(() => {
+    const handleIncomingMessage = (message: TicketMessage) => {
+      setMessages((prev) => [...prev, message]);
+    };
+
+    socket?.on("user-message-at-message-box", handleIncomingMessage);
+
+    return () => {
+      socket?.off("user-message-at-message-box", handleIncomingMessage);
+    };
+  }, []);
+
   const sendMessage = () => {
     if (!input.trim()) return;
 
@@ -143,6 +173,11 @@ const TicketChat = ({
 
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
+
+    socket?.emit("message-to-server-from-client-to-peer", {
+      toAddress,
+      message: newMessage,
+    });
   };
 
   return (
