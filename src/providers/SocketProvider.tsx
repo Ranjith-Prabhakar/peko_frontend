@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { connectSocket, disconnectSocket } from "../socket/socket";
 import type { RootState } from "../store";
+import { connectSocket, disconnectSocket } from "../socket/socket";
 
 export default function SocketProvider() {
   const accessToken = useSelector(
@@ -9,9 +9,11 @@ export default function SocketProvider() {
   );
 
   useEffect(() => {
-    if (accessToken) {
-      connectSocket(accessToken);
+    if (!accessToken) {
+      disconnectSocket();
+      return;
     }
+    connectSocket(accessToken);
 
     return () => {
       disconnectSocket();

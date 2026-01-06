@@ -1,8 +1,9 @@
 import { Formik } from "formik";
-import { createTicketValidationSchema } from "../../validations/ticket.validation";
-import { useUserDashBoardContext } from "../../pages/UserDashBoard/provider/UserDashBoardProvider";
-import type { TicketFormValues } from "../../types/ticket";
-import { createToken } from "../../services/ticket/create";
+import { createTicketValidationSchema } from "../../../validations/ticket.validation";
+import { useUserDashBoardContext } from "../../../pages/UserDashBoard/provider/UserDashBoardProvider";
+import type { TicketFormValues } from "../../../types/ticket";
+import { createTicket } from "../../../services/ticket/create";
+import toast from "react-hot-toast";
 
 
 
@@ -24,10 +25,23 @@ const CreateTicket = () => {
           initialValues={initialValues}
           validationSchema={createTicketValidationSchema}
           validateOnMount
-          onSubmit={async(values) => {
-            console.log("Form Payload:", values);
-            await createToken(values);
-          }}
+         onSubmit={async (values, { resetForm, setSubmitting }) => {
+  try {
+    const { status, data } = await createTicket(values);
+
+    if (status === 201) {
+      toast.success(data.message || "Ticket created successfully");
+
+      resetForm();
+    }
+  } catch (err) {
+    toast.error("Failed to create ticket");
+  } finally {
+    setSubmitting(false);
+  }
+}}
+
+
         >
           {(formik) => (
             <form onSubmit={formik.handleSubmit} className="space-y-4">

@@ -1,4 +1,7 @@
 import { io, type Socket } from "socket.io-client";
+import notificationSound from "../assets/notification.mp3";
+
+const sound = new Audio(notificationSound);
 
 let socket: Socket | null = null;
 
@@ -12,16 +15,26 @@ export function connectSocket(accessToken: string) {
     });
 
     socket.on("connect", () => {
-      console.log("Connected to socket server:", socket?.id);
+      console.log("Socket connected:", socket!.id);
     });
 
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected");
+    socket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
       socket = null;
     });
 
-    socket.on("message", (msg) => {
-      console.log("Received message:", msg);
+    socket.on("admin-notification", (payload) => {
+      sound.play()
+      console.log("Admin notification:", payload);
+    });
+
+    socket.on("notification", (payload) => {
+      sound.play()
+      console.log("User notification:", payload);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("Socket error:", err.message);
     });
   }
 

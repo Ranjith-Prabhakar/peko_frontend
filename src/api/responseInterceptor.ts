@@ -80,7 +80,6 @@
 
 
 
-
 import type {
   AxiosInstance,
   AxiosError,
@@ -93,6 +92,11 @@ import type { AuthResponse } from "../types/auth.types";
 type FailedQueueItem = {
   resolve: (token: string) => void;
   reject: (error: unknown) => void;
+};
+
+type RetryRequestConfig = InternalAxiosRequestConfig & {
+  _retry?: boolean;
+  requiresAuth?: boolean;
 };
 
 let isRefreshing = false;
@@ -112,9 +116,7 @@ export const setupResponseInterceptors = (
   apiInstance.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
-      const originalRequest = error.config as
-        | (InternalAxiosRequestConfig & { _retry?: boolean })
-        | undefined;
+      const originalRequest = error.config as RetryRequestConfig | undefined;
 
       if (!error.response || !originalRequest) {
         return Promise.reject(error);
@@ -138,22 +140,16 @@ export const setupResponseInterceptors = (
       if (isRefreshing) {
         return new Promise<string>((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        })
-          .then((token) => {
-            originalRequest.headers.set(
-              "Authorization",
-              `Bearer ${token}`
-            );
-            return apiInstance(originalRequest);
-          })
-          .catch((err) => Promise.reject(err));
+        }).then((token) => {
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return apiInstance(originalRequest);
+        });
       }
 
       isRefreshing = true;
 
       try {
-        console.log("inside res-interceptor");
-
         const res = await apiInstance.post<AuthResponse>(
           "/auth/refresh",
           null,
@@ -173,10 +169,8 @@ export const setupResponseInterceptors = (
 
         processQueue(null, accessToken);
 
-        originalRequest.headers.set(
-          "Authorization",
-          `Bearer ${accessToken}`
-        );
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
 
         return apiInstance(originalRequest);
       } catch (refreshError) {

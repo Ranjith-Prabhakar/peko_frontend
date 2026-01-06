@@ -1,12 +1,13 @@
-import type { MenuItem } from "../../types/menu.items";
-import { useUserDashBoardContext } from "../../pages/UserDashBoard/provider/UserDashBoardProvider";
+import type { MenuItem } from "../../../types/menu.items";
+import { useAdminDashBoardContext } from "../../../pages/AdminDashBoard/provider/AdminDashBoardProvider";
+
 
 interface SidebarProps {
   menuItems: MenuItem[];
 }
 
 const Sidebar = ({ menuItems }: SidebarProps) => {
-  const { activeMenuId, setActiveMenuId } = useUserDashBoardContext();
+  const { activeMenuId, setActiveMenuId } = useAdminDashBoardContext();
 
   return (
       <div className="drawer-side">

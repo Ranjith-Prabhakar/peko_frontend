@@ -1,5 +1,5 @@
-import Body from "../../features/DashBoard/Body";
-import Sidebar from "../../features/DashBoard/Sidebar";
+import Body from "../../features/DashBoard/User/Body";
+import Sidebar from "../../features/DashBoard/User/Sidebar";
 import { menuItems } from "./constants/menubarItems";
 import UserDashBoardProvider from "./provider/UserDashBoardProvider";
 const Index = () => {

@@ -2,7 +2,6 @@ import { store } from "../store";
 import { setCredentials } from "../store/features/auth/authSlice";
 import { refreshAccessToken } from "../services/auth/authService";
 import type { AuthResponse } from "../types/auth.types";
-import { connectSocket } from "../socket/socket";
 
 export const ensureAccessToken = async () => {
   const state = store.getState();
@@ -17,7 +16,6 @@ export const ensureAccessToken = async () => {
 
     if (newAccessToken && data) {
       store.dispatch(setCredentials({ accessToken: newAccessToken, data }));
-      connectSocket(data.id); 
       return newAccessToken;
     }
 

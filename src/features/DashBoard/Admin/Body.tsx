@@ -1,14 +1,13 @@
-import CreateTicket from "./CreateTicket";
-import { useUserDashBoardContext } from "../../pages/UserDashBoard/provider/UserDashBoardProvider";
+import { useAdminDashBoardContext } from "../../../pages/AdminDashBoard/provider/AdminDashBoardProvider";
 
 const Body = () => {
-  const { activeMenuId } = useUserDashBoardContext();
+  const { activeMenuId } = useAdminDashBoardContext();
 
   return (
     <div className="drawer-content flex flex-col items-center justify-center">
-      {activeMenuId === 2 && (
+      {/* {activeMenuId === 2 && (
         <CreateTicket/>
-      )}
+      )} */}
 
       {!activeMenuId && (
         <div className="text-gray-500">
