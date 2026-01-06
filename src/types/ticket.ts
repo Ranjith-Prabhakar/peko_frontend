@@ -4,3 +4,10 @@ export  interface TicketFormValues {
   categoryId: number | "";
   priority: "low" | "medium" | "high";
 }
+
+export interface TicketMessage {
+  ticketId: number;
+  message: string;
+  senderId: number; 
+  createdAt: string;  
+}

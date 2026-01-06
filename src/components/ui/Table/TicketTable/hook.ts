@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import useGetUser from "../../../hooks/useGetUser";
-import { fetchTicket } from "../../../services/ticket/fetch";
+import useGetUser from "../../../../hooks/useGetUser";
+import { fetchTicket } from "../../../../services/ticket/fetch";
 import { type Ticket } from "./TicketTable";
 
 const useTableHook = () => {

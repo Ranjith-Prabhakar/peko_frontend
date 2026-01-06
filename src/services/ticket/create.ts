@@ -7,7 +7,8 @@ export const createTicket = async (payLoad:TicketFormValues) => {
       withCredentials: true,
       requiresAuth: true
     });
-    const { status ,data } = response.data;
+    console.log("Create ticket response:99999999999", response);
+    const { status ,data } = response;
     return { status, data };
    
   } catch (error) {

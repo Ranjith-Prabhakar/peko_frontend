@@ -1,11 +1,25 @@
-import React from 'react'
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../store";
+import NotificationTable from "../../../components/ui/Table/NotificationTable";
+import { mergeAndSortNotifications } from "../../..//utils/notification.utils";
 
-type Props = {}
+const AdminNotificationsPage = () => {
+  const { newTickets, statusUpdates, messages } = useSelector(
+    (state: RootState) => state.notification
+  );
 
-const index = (props: Props) => {
+  const notifications = mergeAndSortNotifications(
+    newTickets,
+    statusUpdates,
+    messages
+  );
+
   return (
-    <div>index</div>
-  )
-}
+    <NotificationTable
+      notifications={notifications}
+      role="admin"
+    />
+  );
+};
 
-export default index
+export default AdminNotificationsPage;

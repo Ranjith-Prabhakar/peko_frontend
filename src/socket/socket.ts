@@ -1,5 +1,8 @@
 import { io, type Socket } from "socket.io-client";
 import notificationSound from "../assets/notification.mp3";
+import { store } from "../store";
+import { addNewTicket, addNewMessage } from "../store/features/notification/notificationSlice";
+
 
 const sound = new Audio(notificationSound);
 
@@ -23,12 +26,12 @@ export function connectSocket(accessToken: string) {
       socket = null;
     });
 
-    socket.on("admin-notification", (payload) => {
+    socket.on("admin-new-ticket", (payload) => {
       sound.play()
-      console.log("Admin notification:", payload);
+      store.dispatch(addNewTicket(payload))
     });
 
-    socket.on("notification", (payload) => {
+    socket.on("user-new-message", (payload) => {
       sound.play()
       console.log("User notification:", payload);
     });
@@ -48,3 +51,5 @@ export function disconnectSocket() {
     socket = null;
   }
 }
+
+export { socket }; 

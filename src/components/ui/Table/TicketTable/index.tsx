@@ -1,5 +1,5 @@
 import TicketTable from "./TicketTable";
-import Pagination from "../../common/Pagination";
+import Pagination from "../../../common/Pagination";
 import useTableHook from "./hook";
 
 const TableWrapper = () => {

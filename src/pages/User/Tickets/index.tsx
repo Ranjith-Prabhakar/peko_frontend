@@ -1,4 +1,4 @@
-import TableWrapper from '../../../components/ui/Table/TableWrapper'
+import TableWrapper from '../../../components/ui/Table/TicketTable'
 
 const index = () => {
   return (
