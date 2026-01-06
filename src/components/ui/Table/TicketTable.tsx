@@ -37,7 +37,12 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
             <tr
               key={ticket.id}
               className="hover cursor-pointer"
-              onClick={() => navigate(`/tickets/${ticket.id}`)}
+             onClick={() =>
+  navigate(
+    `/${isAdmin ? "admin" : "user"}/tickets/${ticket.id}`,
+    { state: { ticket } }  
+  )
+}
             >
               <td>{index + 1}</td>
               <td className="font-medium">{ticket.title}</td>

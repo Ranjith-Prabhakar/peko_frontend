@@ -20,15 +20,3 @@ export function setupRequestInterceptors(api: AxiosInstance): void {
   );
 }
 
-
-
-{
-  /**
-  api.get("/profile", {
-  requiresAuth: true
-});
-
-api.get("/public/products"); // no auth needed
-  */
-}
-

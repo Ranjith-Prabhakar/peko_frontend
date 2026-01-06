@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Suspense, lazy } from "react";
-import { Toaster } from "react-hot-toast"; // <-- import Toaster
+import { Toaster } from "react-hot-toast";
 import AuthProtectedRoute from "./AuthProtectedRoute";
 import GuestOnlyRoute from "./GuestOnlyRoute";
 
@@ -23,39 +23,35 @@ const UserNotifications = lazy(() => import("../pages/User/Notifications"));
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      {/* Global Toaster */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 3000,
-          style: { background: "#333", color: "#fff" },
-        }}
-      />
+
+      <Toaster position="top-right" toastOptions={{
+        duration: 3000,
+        style: { background: "#333", color: "#fff" }
+      }} />
 
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
 
-          {/* Guest Routes */}
           <Route path="/login" element={<GuestOnlyRoute><Login /></GuestOnlyRoute>} />
           <Route path="/signup" element={<GuestOnlyRoute><Register /></GuestOnlyRoute>} />
 
-          {/* Protected Routes (Admin + User) */}
-          <Route element={<AuthProtectedRoute />}>
-            
-            {/* Redirect / to proper dashboard based on user role */}
-            <Route path="/" element={<AuthProtectedRouteRedirect />} />
+          <Route
+            path="/"
+            element={<AuthRedirect />}
+          />
 
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />} >
+          <Route element={<AuthProtectedRoute allowedRoles={["admin"]} />}>
+            <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminReports />} />
               <Route path="reports" element={<AdminReports />} />
               <Route path="tickets" element={<AdminTickets />} />
               <Route path="tickets/:id" element={<AdminTicketDetails />} />
               <Route path="notifications" element={<AdminNotifications />} />
             </Route>
+          </Route>
 
-            {/* User Routes */}
-            <Route path="/user" element={<UserLayout />} >
+          <Route element={<AuthProtectedRoute allowedRoles={["user"]} />}>
+            <Route path="/user" element={<UserLayout />}>
               <Route index element={<UserTickets />} />
               <Route path="tickets" element={<UserTickets />} />
               <Route path="create-ticket" element={<CreateTicket />} />
@@ -63,7 +59,6 @@ const AppRouter = () => {
             </Route>
           </Route>
 
-          {/* Fallback */}
           <Route path="*" element={<div>404 Not Found</div>} />
 
         </Routes>
@@ -72,13 +67,15 @@ const AppRouter = () => {
   );
 };
 
-const AuthProtectedRouteRedirect = () => {
+const AuthRedirect = () => {
   const user = useGetUser();
 
-  if (user === undefined) return <div>Loading...</div>; 
+  if (user === undefined) return <div>Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
 
-  return user.role === "admin" ? <Navigate to="/admin" replace /> : <Navigate to="/user" replace />;
+  return user.role === "admin"
+    ? <Navigate to="/admin" replace />
+    : <Navigate to="/user" replace />;
 };
 
 export default AppRouter;

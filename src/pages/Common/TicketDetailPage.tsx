@@ -32,12 +32,6 @@ const TicketDetailPage = ({ isAdmin }: Props) => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <button
-        className="btn btn-sm btn-ghost mb-4"
-        onClick={() => navigate(-1)}
-      >
-        ← Back
-      </button>
 
       <div className="card bg-base-100 shadow p-6">
         <h2 className="text-2xl font-bold mb-2">
@@ -63,8 +57,6 @@ const TicketDetailPage = ({ isAdmin }: Props) => {
             </span>
           )}
         </div>
-
-        {/* future: status change / chat / assign admin */}
       </div>
     </div>
   );

@@ -1,23 +1,22 @@
 import { Navigate, Outlet } from "react-router-dom";
 import useGetUser from "../hooks/useGetUser";
 
-interface AuthProtectedRouteProps {
-  allowedRoles?: string[]; // optional: restrict access
+interface Props {
+  allowedRoles?: Array<"admin" | "user">;
 }
 
-const AuthProtectedRoute = ({ allowedRoles }: AuthProtectedRouteProps) => {
+const AuthProtectedRoute = ({ allowedRoles }: Props) => {
   const user = useGetUser();
 
-  if (user === undefined) return <div>Loading...</div>; // waiting for token/user
-
+  if (user === undefined) return <div>Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
 
-  // If allowedRoles are provided, check role
+  
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />; // <-- Render nested routes
+  return <Outlet />;
 };
 
 export default AuthProtectedRoute;
