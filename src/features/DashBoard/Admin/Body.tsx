@@ -1,3 +1,4 @@
+import TableWrapper from "../../../components/ui/Table/TableWrapper";
 import { useAdminDashBoardContext } from "../../../pages/AdminDashBoard/provider/AdminDashBoardProvider";
 
 const Body = () => {
@@ -5,9 +6,9 @@ const Body = () => {
 
   return (
     <div className="drawer-content flex flex-col items-center justify-center">
-      {/* {activeMenuId === 2 && (
-        <CreateTicket/>
-      )} */}
+      {activeMenuId === 2 && (
+        <TableWrapper />
+      )}
 
       {!activeMenuId && (
         <div className="text-gray-500">

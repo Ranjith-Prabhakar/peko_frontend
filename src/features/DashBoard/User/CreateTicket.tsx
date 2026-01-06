@@ -1,14 +1,24 @@
 import { Formik } from "formik";
 import { createTicketValidationSchema } from "../../../validations/ticket.validation";
-import { useUserDashBoardContext } from "../../../pages/UserDashBoard/provider/UserDashBoardProvider";
 import type { TicketFormValues } from "../../../types/ticket";
 import { createTicket } from "../../../services/ticket/create";
 import toast from "react-hot-toast";
-
-
+import { fetchCategories } from "../../../services/categories/fetchCategories";
+import { useEffect, useState } from "react";
+import type { Category } from "../../../types/category";
 
 const CreateTicket = () => {
-  const {categories} =useUserDashBoardContext();
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  // Fetch categories on mount
+  useEffect(() => {
+    const loadCategories = async () => {
+      const cats = await fetchCategories();
+      if (cats) setCategories(cats);
+    };
+
+    loadCategories();
+  }, []);
   const initialValues: TicketFormValues = {
     title: "",
     description: "",

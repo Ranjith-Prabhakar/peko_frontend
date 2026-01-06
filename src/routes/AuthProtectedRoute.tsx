@@ -1,18 +1,23 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import useGetUser from "../hooks/useGetUser";
-import { lazy } from "react";
 
-const AdminDashBoard = lazy(() => import("../pages/AdminDashBoard"));
-const UserDashBoard = lazy(() => import("../pages/UserDashBoard"));
+interface AuthProtectedRouteProps {
+  allowedRoles?: string[]; // optional: restrict access
+}
 
-const AuthProtectedRoute = () => {
+const AuthProtectedRoute = ({ allowedRoles }: AuthProtectedRouteProps) => {
   const user = useGetUser();
 
-  if (user === undefined) return <div>Loading...</div>;
+  if (user === undefined) return <div>Loading...</div>; // waiting for token/user
 
   if (!user) return <Navigate to="/login" replace />;
 
-  return user.role === "admin" ? <AdminDashBoard /> : <UserDashBoard />;
+  // If allowedRoles are provided, check role
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <Outlet />; // <-- Render nested routes
 };
 
 export default AuthProtectedRoute;

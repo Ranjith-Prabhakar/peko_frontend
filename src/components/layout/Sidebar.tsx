@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import type { MenuItem } from "../../../types/menu.items";
+import type { MenuItem } from "../../types/menu.items";
 
 interface SidebarProps {
   menuItems: MenuItem[];

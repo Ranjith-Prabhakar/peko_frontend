@@ -1,4 +1,4 @@
-import Brand from "../../../components/layout/Brand";
+import Brand from "../../../components/ui/Brand";
 import NavBar from "../../../features/Navbar";
 
 export default function Header() {
