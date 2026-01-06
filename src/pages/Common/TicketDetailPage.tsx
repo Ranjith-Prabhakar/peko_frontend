@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 
 type Props = {
   isAdmin: boolean;
@@ -7,7 +7,6 @@ type Props = {
 
 const TicketDetailPage = ({ isAdmin }: Props) => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [ticket, setTicket] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 

@@ -19,6 +19,11 @@ const AdminNotifications = lazy(() => import("../pages/Admin/Notifications"));
 const UserTickets = lazy(() => import("../pages/User/Tickets"));
 const CreateTicket = lazy(() => import("../pages/User/CreateTicket"));
 const UserNotifications = lazy(() => import("../pages/User/Notifications"));
+const UserTicketDetails = lazy(() => import("../pages/User/TicketDetails"));
+
+const Logout = lazy(() => import("../pages/Logout"));
+const NotFoundPage = lazy(() => import("../pages/NotFound"));
+
 
 const AppRouter = () => {
   return (
@@ -41,6 +46,7 @@ const AppRouter = () => {
           />
 
           <Route element={<AuthProtectedRoute allowedRoles={["admin"]} />}>
+          <Route path="/logout" element={<Logout />} />
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminReports />} />
               <Route path="reports" element={<AdminReports />} />
@@ -54,12 +60,13 @@ const AppRouter = () => {
             <Route path="/user" element={<UserLayout />}>
               <Route index element={<UserTickets />} />
               <Route path="tickets" element={<UserTickets />} />
+              <Route path="tickets/:id" element={<UserTicketDetails />} />
               <Route path="create-ticket" element={<CreateTicket />} />
               <Route path="notifications" element={<UserNotifications />} />
             </Route>
           </Route>
 
-          <Route path="*" element={<div>404 Not Found</div>} />
+          <Route path="*" element={<NotFoundPage />} />
 
         </Routes>
       </Suspense>

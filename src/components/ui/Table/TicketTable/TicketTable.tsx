@@ -22,13 +22,12 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
       <table className="table table-sm">
         <thead>
           <tr>
-            <th>#</th>
+            <th>Id</th>
             <th>Title</th>
             <th>Description</th>
             <th>Priority</th>
             <th>Status</th>
             {isAdmin && <th>Viewed</th>}
-            <th>Chat</th>
           </tr>
         </thead>
 
@@ -38,12 +37,12 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
               key={ticket.id}
               className="hover cursor-pointer"
              onClick={() =>
-  navigate(
-    `/${isAdmin ? "admin" : "user"}/tickets/${ticket.id}`,
-    { state: { ticket } }  
-  )
-}
-            >
+                  navigate(
+                    `/${isAdmin ? "admin" : "user"}/tickets/${ticket.id}`,
+                    { state: { ticket } }  
+                  )
+                }
+               >
               <td>{index + 1}</td>
               <td className="font-medium">{ticket.title}</td>
               <td className="truncate max-w-xs">
@@ -66,21 +65,10 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
 
               {isAdmin && (
                 <td>
-                  {ticket.isViewedByAdmin ? "✅" : "❌"}
+                  {ticket.isViewedByAdmin ? "Viewed" : "Not Viewed"}
                 </td>
               )}
 
-              <td>
-                <button
-                  className="btn btn-xs btn-primary"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    // open chat modal later
-                  }}
-                >
-                  Chat
-                </button>
-              </td>
             </tr>
           ))}
         </tbody>

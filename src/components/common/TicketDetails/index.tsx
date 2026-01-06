@@ -1,13 +1,12 @@
-// src/components/common/TicketDetails/index.tsx
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import type { Ticket } from "../../ui/Table/TicketTable/TicketTable";
 import { markTicketViewed, updateTicketStatus } from "../../../services/ticket/update";
-import TicketChat from "../../TicketChat";
+// import TicketChat from "../../TicketChat";
 
 interface TicketDetailsProps {
   role: "admin" | "user";
-  ticket?: Ticket | null; // Optional if passed directly
+  ticket?: Ticket | null; 
 }
 
 const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
@@ -22,12 +21,6 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
   if (!ticket) {
     return <div className="p-6">Ticket not found</div>;
   }
-
-  /** -----------------------------
-   * Handle Actions
-   * ----------------------------- */
-
-  // Admin only: mark as viewed
   const handleMarkViewed = async () => {
     if (role !== "admin") return;
     try {
@@ -39,12 +32,12 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
     }
   };
 
-  // Update ticket status (admin any status, user only 'closed')
   const handleUpdateStatus = async (status?: Ticket["status"]) => {
     const newStatus = role === "user" ? "closed" : status ?? pendingStatus;
     try {
       setSavingStatus(true);
       const updatedTicket = await updateTicketStatus(ticket.id, newStatus);
+      console.log("updatedTicket",updatedTicket)
       setTicket(updatedTicket);
       setPendingStatus(updatedTicket.status);
     } finally {
@@ -52,15 +45,11 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
     }
   };
 
-  /** -----------------------------
-   * Render
-   * ----------------------------- */
 
   return (
     <div className="p-6 flex justify-center">
       <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        {/* Ticket Info */}
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body space-y-4">
             <h2 className="text-xl font-bold">{ticket.title}</h2>
@@ -76,7 +65,6 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
               )}
             </div>
 
-            {/* Admin only: Mark as viewed */}
             {role === "admin" && !ticket.isViewedByAdmin && (
               <button
                 className="btn btn-outline btn-sm w-fit"
@@ -87,7 +75,6 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
               </button>
             )}
 
-            {/* Status Actions */}
             <div className="space-y-2">
               <label className="label font-semibold">
                 {role === "admin" ? "Update Status" : "Ticket Status"}
@@ -129,8 +116,7 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
           </div>
         </div>
 
-        {/* Conversation / Chat */}
-        <TicketChat ticketId={ticket.id} role={role} />
+        {/* <TicketChat ticketId={ticket.id} role={role} /> */}
       </div>
     </div>
   );

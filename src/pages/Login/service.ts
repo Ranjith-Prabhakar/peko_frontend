@@ -4,6 +4,7 @@ import type { NavigateFunction } from "react-router-dom";
 import { store } from "../../store";
 import { setCredentials } from "../../store/features/auth/authSlice";
 import { connectSocket } from "../../socket/socket";
+import type { AxiosError } from "axios";
 
 type LoginPayload = {
   email: string;
@@ -11,44 +12,44 @@ type LoginPayload = {
 };
 
 export async function submitLogin(
-  payLoad: LoginPayload,
+  payload: LoginPayload,
   clearFields: () => void,
   navigate: NavigateFunction,
   setLoading: (loading: boolean) => void
 ): Promise<void> {
-  try {
-    setLoading(true);
+  setLoading(true);
 
-    const result = await axios.post("/auth/login", payLoad, {
+  try {
+    const res = await axios.post("/auth/login", payload, {
       withCredentials: true,
       requiresAuth: false,
     });
 
-    setLoading(false);
+    const { accessToken, user } = res.data.data;
 
-    if (result.status === 200) {
-      const { accessToken, user } = result.data.data;
-      store.dispatch(
-        setCredentials({
-          accessToken,
-          data: user,
-        })
-      );
-      connectSocket(user.id);
-      clearFields();
-      toast.success("User login successful.");
-      navigate("/");
-    } else {
-      console.log("Login Error: ----");
-      toast.error(result.data.message || "Something went wrong.");
-    }
-  } catch (error:any) {
+    store.dispatch(
+      setCredentials({
+        accessToken,
+        data: user,
+      })
+    );
+
+    connectSocket(accessToken); 
     clearFields();
-    setLoading(false);
-    if(error.status === 401) {
-      toast.error("Invalid email or password.");
+    toast.success("Login successful");
+    navigate("/");
+  } catch (err) {
+    const error = err as AxiosError<any>;
+
+    if (error.response?.status === 401) {
+      toast.error("Invalid email or password");
       return;
     }
-    toast.error("Something went wrong.");
+
+    toast.error(
+      error.response?.data?.message || "Something went wrong"
+    );
+  } finally {
+    setLoading(false);
   }
 }

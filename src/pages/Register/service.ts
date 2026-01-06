@@ -1,6 +1,7 @@
 import axios from "../../api/axiosInstance";
 import toast from "react-hot-toast";
 import type { NavigateFunction } from "react-router-dom";
+import type { AxiosError } from "axios";
 
 export type SignupPayload = {
   name: string;
@@ -9,29 +10,27 @@ export type SignupPayload = {
 };
 
 export async function submitSignup(
-  payLoad: SignupPayload,
+  payload: SignupPayload,
   clearFields: () => void,
   navigate: NavigateFunction,
   setLoading: (loading: boolean) => void
 ): Promise<void> {
+  setLoading(true);
+
   try {
-    setLoading(true);
+    await axios.post("/auth/signup", payload);
 
-    const result = await axios.post("/auth/signup", payLoad);
+    clearFields();
+    toast.success("Registration successful. Please login.");
+    navigate("/login");
+  } catch (err) {
+    const error = err as AxiosError<any>;
 
-    setLoading(false);
-
-    if (result.status === 201) {
-      clearFields();
-      toast.success("User registration successful. Please login now.");
-      navigate("/login");
-    } else {
-      toast.error(
-        result.data?.message || "Something went wrong. Please try again."
-      );
-    }
-  } catch (error) {
-    toast.error("Something went wrong. Please try again.");
+    toast.error(
+      error.response?.data?.message ||
+      "Something went wrong. Please try again."
+    );
+  } finally {
     setLoading(false);
   }
 }

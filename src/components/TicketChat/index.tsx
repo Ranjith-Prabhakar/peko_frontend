@@ -20,7 +20,6 @@ const TicketChat = ({ ticketId, role }: TicketChatProps) => {
   useEffect(() => {
     if (!accessToken) return;
 
-    // Ensure socket is connected
     connectSocket(accessToken);
     const socket = getSocket();
 

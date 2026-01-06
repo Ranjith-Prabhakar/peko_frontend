@@ -18,7 +18,7 @@ const Sidebar = ({ menuItems }: SidebarProps) => {
   return (
     <ul className="menu bg-base-200 min-h-full w-48 p-4">
       {menuItems.map((item) => {
-        const isNotificationItem = item.path === "/admin/notifications";
+        const isNotificationItem = item.path.endsWith("/notifications");
 
         return (
           <li key={item.id}>
@@ -44,5 +44,6 @@ const Sidebar = ({ menuItems }: SidebarProps) => {
     </ul>
   );
 };
+
 
 export default Sidebar;

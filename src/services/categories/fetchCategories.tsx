@@ -7,9 +7,6 @@ export const fetchCategories = async (): Promise<Category[] | undefined> => {
       withCredentials: true,
       requiresAuth: true
     });
-
-    console.log("response.data", response.data.data);
-
     return response.data.data as Category[];
   } catch (error) {
     console.error("Failed to fetch categories:", error);

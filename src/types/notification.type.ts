@@ -22,25 +22,3 @@ export interface NotificationState {
   statusUpdates: TicketNotification[];
   messages: TicketNotification[];
 }
-
-
-// bakend
-// notifyAdminsNewTicket({
-//   type: "NEW_TICKET",
-//   ticketId: ticket.id,
-//   title: ticket.title,
-//   userId: payload.userId,
-//   createdAt: ticket.createdAt,
-// });
-// notifyUserStatusChange(userId, {
-//   type: "STATUS_UPDATE",
-//   ticketId,
-//   status: "closed",
-//   createdAt: new Date().toISOString(),
-// });
-// notifyUserMessage(userId, {
-//   type: "MESSAGE",
-//   ticketId,
-//   message: "Admin replied",
-//   createdAt: new Date().toISOString(),
-// });
