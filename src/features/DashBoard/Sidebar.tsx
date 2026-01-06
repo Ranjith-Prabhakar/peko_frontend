@@ -1,17 +1,14 @@
 import type { MenuItem } from "../../types/menu.items";
+import { useUserDashBoardContext } from "../../pages/UserDashBoard/provider/UserDashBoardProvider";
 
 interface SidebarProps {
   menuItems: MenuItem[];
 }
+
 const Sidebar = ({ menuItems }: SidebarProps) => {
+  const { activeMenuId, setActiveMenuId } = useUserDashBoardContext();
+
   return (
-    <div className="drawer lg:drawer-open">
-      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
-
-      <div className="drawer-content flex flex-col items-center justify-center">
-        {/* Page content here */}
-      </div>
-
       <div className="drawer-side">
         <label
           htmlFor="my-drawer-3"
@@ -20,14 +17,25 @@ const Sidebar = ({ menuItems }: SidebarProps) => {
         />
 
         <ul className="menu bg-base-200 min-h-full w-40 p-4">
-          {menuItems.map((item) => (
-            <li key={item.id}>
-              <a>{item.item}</a>
-            </li>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = activeMenuId === item.id;
+
+            return (
+              <li key={item.id}>
+                <a
+                  onClick={() => setActiveMenuId(item.id)}
+                  className={`cursor-pointer transition-colors
+                    ${isActive ? "bg-primary text-white" : ""}
+                  `}
+                >
+                  {item.item}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
-    </div>
+   
   );
 };
 
