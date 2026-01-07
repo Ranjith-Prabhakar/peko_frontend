@@ -1,7 +1,8 @@
 import { io, type Socket } from "socket.io-client";
 import notificationSound from "../assets/notification.mp3";
 import { store } from "../store";
-import { addNewTicket, addStatusUpdate } from "../store/features/notification/notificationSlice";
+import { addNewMessage, addNewTicket, addStatusUpdate } from "../store/features/notification/notificationSlice";
+import { addMessage } from "../store/features/chat/chatSlice";
 
 
 const sound = new Audio(notificationSound);
@@ -45,16 +46,41 @@ export function connectSocket(accessToken: string) {
     
     socket.on("user-message", (payload) => {
       sound.play()
-      console.log("Admin notification:", payload);
-      store.dispatch(addStatusUpdate(payload))
+      const state = store.getState();
+  const currentTicketId = state.chat.currentTicketId;
+  const { ticketId, ...messageDetail } = payload;
+
+  if (currentTicketId === ticketId) {
+    store.dispatch(
+      addMessage({
+        ticketId,
+        ...messageDetail,
+      })
+    );
+  }
+
+
+  store.dispatch(addNewMessage(payload));
     });
-    
-    socket.on("admin-message", (payload) => {
-      sound.play()
-      console.log("Admin notification:", payload);
-      store.dispatch(addStatusUpdate(payload))
-    });
-    
+
+  socket.on("admin-message", (payload) => {
+  sound.play();
+  const state = store.getState();
+  const currentTicketId = state.chat.currentTicketId;
+  const { ticketId, ...messageDetail } = payload;
+
+  if (currentTicketId === ticketId) {
+    store.dispatch(
+      addMessage({
+        ticketId,
+        ...messageDetail,
+      })
+    );
+  }
+
+
+  store.dispatch(addNewMessage(payload));
+});
     socket.on("connect_error", (err) => {
       console.error("Socket error:", err.message);
     });
