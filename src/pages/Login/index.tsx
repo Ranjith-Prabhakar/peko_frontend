@@ -21,9 +21,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
+      <div className="w-full max-w-md bg-[#162033] rounded-lg shadow-lg p-8">
         <div className="flex justify-center items-center">
-          <h2 className="text-2xl font-bold text-center">Login</h2>
+          <h2 className="text-2xl font-bold text-center text-white">Login</h2>
         </div>
 
         <FormInput
@@ -55,7 +55,7 @@ const Index = () => {
           submitHandler={submitLoginFormHandler}
         />
 
-        <h5 className="text-center mt-4 text-sm">
+        <h5 className="text-center mt-4 text-sm text-white">
           Not registered yet?{" "}
           <span
             onClick={() => navigate("/signup")}

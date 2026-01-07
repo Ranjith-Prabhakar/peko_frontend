@@ -7,13 +7,16 @@ import useGetUser from "../../../hooks/useGetUser";
 
 interface TicketDetailsProps {
   role: "admin" | "user";
-  ticket?: Ticket | null; 
+  ticket?: Ticket | null;
 }
 
 const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
-  const user = useGetUser()
+  const user = useGetUser();
   const { state } = useLocation();
-  const [ticket, setTicket] = useState<Ticket | null>(initialTicket ?? state?.ticket ?? null);
+
+  const [ticket, setTicket] = useState<Ticket | null>(
+    initialTicket ?? state?.ticket ?? null
+  );
   const [pendingStatus, setPendingStatus] = useState<Ticket["status"]>(
     ticket?.status ?? "open"
   );
@@ -21,8 +24,13 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
   const [markingViewed, setMarkingViewed] = useState(false);
 
   if (!ticket) {
-    return <div className="p-6">Ticket not found</div>;
+    return (
+      <div className="p-6 text-white/60 bg-gray-900 border border-white/10 rounded-md">
+        Ticket not found
+      </div>
+    );
   }
+
   const handleMarkViewed = async () => {
     if (role !== "admin") return;
     try {
@@ -39,7 +47,6 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
     try {
       setSavingStatus(true);
       const updatedTicket = await updateTicketStatus(ticket.id, newStatus);
-      console.log("updatedTicket",updatedTicket)
       setTicket(updatedTicket);
       setPendingStatus(updatedTicket.status);
     } finally {
@@ -47,21 +54,36 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
     }
   };
 
-
   return (
     <div className="p-6 flex justify-center">
-      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div
+        className="
+          w-full max-w-6xl
+          grid grid-cols-1 md:grid-cols-2 gap-6
+          h-[70vh]
+        "
+      >
+        <div className="bg-gray-900 border border-white/10 rounded-lg shadow-xl flex flex-col h-full">
+          <div className="p-6 space-y-4 flex-1 overflow-y-auto">
+            <h2 className="text-xl font-bold text-white">
+              {ticket.title}
+            </h2>
 
-        <div className="card bg-base-100 shadow-xl">
-          <div className="card-body space-y-4">
-            <h2 className="text-xl font-bold">{ticket.title}</h2>
-            <p className="text-gray-600">{ticket.description}</p>
+            <p className="text-white/70">
+              {ticket.description}
+            </p>
 
             <div className="flex gap-3 flex-wrap">
-              <span className="badge badge-outline">Priority: {ticket.priority}</span>
-              <span className="badge badge-outline">Status: {ticket.status}</span>
+              <span className="badge badge-outline text-white border-white/30">
+                Priority: {ticket.priority}
+              </span>
+
+              <span className="badge badge-outline text-white border-white/30">
+                Status: {ticket.status}
+              </span>
+
               {role === "admin" && (
-                <span className="badge badge-outline">
+                <span className="badge badge-outline text-white border-white/30">
                   Viewed: {ticket.isViewedByAdmin ? "Viewed" : "Not Viewed"}
                 </span>
               )}
@@ -69,7 +91,14 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
 
             {role === "admin" && !ticket.isViewedByAdmin && (
               <button
-                className="btn btn-outline btn-sm w-fit"
+                className="
+                  btn btn-sm
+                  bg-gray-900
+                  border border-white/20
+                  text-white
+                  hover:bg-indigo-500/10
+                  hover:border-indigo-400/40
+                "
                 onClick={handleMarkViewed}
                 disabled={markingViewed}
               >
@@ -78,16 +107,25 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
             )}
 
             <div className="space-y-2">
-              <label className="label font-semibold">
+              <label className="label font-semibold text-white">
                 {role === "admin" ? "Update Status" : "Ticket Status"}
               </label>
 
               {role === "admin" ? (
                 <>
                   <select
-                    className="select select-bordered w-full"
+                    className="
+                      select w-full
+                      bg-gray-900
+                      border border-white/20
+                      text-white
+                      focus:outline-none
+                      focus:border-indigo-400/50
+                    "
                     value={pendingStatus}
-                    onChange={(e) => setPendingStatus(e.target.value as Ticket["status"])}
+                    onChange={(e) =>
+                      setPendingStatus(e.target.value as Ticket["status"])
+                    }
                   >
                     <option value="open">Open</option>
                     <option value="in_progress">In Progress</option>
@@ -96,7 +134,13 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
                   </select>
 
                   <button
-                    className="btn btn-primary w-full"
+                    className="
+                      btn w-full
+                      bg-indigo-600/90
+                      hover:bg-indigo-600
+                      border-none
+                      text-white
+                    "
                     onClick={() => handleUpdateStatus()}
                     disabled={savingStatus || pendingStatus === ticket.status}
                   >
@@ -106,7 +150,13 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
               ) : (
                 ticket.status !== "closed" && (
                   <button
-                    className="btn btn-error w-full"
+                    className="
+                      btn w-full
+                      bg-red-500/90
+                      hover:bg-red-500
+                      border-none
+                      text-white
+                    "
                     onClick={() => handleUpdateStatus("closed")}
                     disabled={savingStatus}
                   >
@@ -118,8 +168,15 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
           </div>
         </div>
 
-        {/* <TicketChat  /> */}
-        <TicketChat ticketId={ticket.id} currentUserId={Number(user?.id)} currentUserName={user?.name as string} />
+        <div className="bg-gray-900 border border-white/10 rounded-lg shadow-xl flex flex-col h-full">
+          <div className="flex-1 overflow-y-auto">
+            <TicketChat
+              ticketId={ticket.id}
+              currentUserId={Number(user?.id)}
+              currentUserName={user?.name as string}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

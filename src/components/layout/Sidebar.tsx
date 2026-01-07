@@ -16,18 +16,30 @@ const Sidebar = ({ menuItems }: SidebarProps) => {
     newTickets.length + statusUpdates.length + messages.length;
 
   return (
-    <ul className="menu bg-base-200 min-h-full w-48 p-4">
+    <ul className="menu min-h-full w-48 p-4 bg-[#162033] text-white shadow-xl">
+      <div className="flex justify-center items-center w-full h-12 border-b border-white/10 mb-6 py-8">
+        <h3 className="text-3xl font-extrabold">Peko</h3>
+      </div>
+
       {menuItems.map((item) => {
         const isNotificationItem = item.path.endsWith("/notifications");
 
         return (
-          <li key={item.id}>
+          <li key={item.id} className="p-0">
             <NavLink
               to={item.path}
               className={({ isActive }) =>
-                `flex justify-between items-center transition-colors ${
-                  isActive ? "bg-primary text-white" : ""
-                }`
+                `
+                flex w-full items-center justify-between
+                px-4 py-3
+                rounded-md
+                transition-colors
+                ${
+                  isActive
+                    ? "bg-primary text-white"
+                    : "hover:bg-gray-700/60"
+                }
+                `
               }
             >
               <span>{item.item}</span>
@@ -44,6 +56,5 @@ const Sidebar = ({ menuItems }: SidebarProps) => {
     </ul>
   );
 };
-
 
 export default Sidebar;

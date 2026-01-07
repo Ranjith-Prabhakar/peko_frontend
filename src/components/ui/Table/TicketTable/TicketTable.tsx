@@ -18,9 +18,9 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-x-auto">
-      <table className="table table-sm">
-        <thead>
+    <div className="overflow-x-auto min-h-[70vh] p-4">
+      <table className="table table-sm border border-white/10 bg-gray-900">
+        <thead className="text-white border-b border-white/20">
           <tr>
             <th>Id</th>
             <th>Title</th>
@@ -35,19 +35,31 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
           {tickets.map((ticket, index) => (
             <tr
               key={ticket.id}
-              className="hover cursor-pointer"
-             onClick={() =>
-                  navigate(
-                    `/${isAdmin ? "admin" : "user"}/tickets/${ticket.id}`,
-                    { state: { ticket } }  
-                  )
-                }
-               >
-              <td>{index + 1}</td>
-              <td className="font-medium">{ticket.title}</td>
-              <td className="truncate max-w-xs">
+              onClick={() =>
+                navigate(
+                  `/${isAdmin ? "admin" : "user"}/tickets/${ticket.id}`,
+                  { state: { ticket } }
+                )
+              }
+              className="
+                cursor-pointer
+                border-b border-white/10
+                transition-all duration-200
+                hover:bg-indigo-500/10
+                hover:border-indigo-400/40
+                last:border-b-0
+              "
+            >
+              <td className="opacity-80">{index + 1}</td>
+
+              <td className="font-medium text-white">
+                {ticket.title}
+              </td>
+
+              <td className="truncate max-w-xs opacity-80">
                 {ticket.description}
               </td>
+
               <td>
                 <span
                   className={`badge ${
@@ -61,14 +73,16 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
                   {ticket.priority}
                 </span>
               </td>
-              <td>{ticket.status}</td>
+
+              <td className="capitalize opacity-80">
+                {ticket.status.replace("_", " ")}
+              </td>
 
               {isAdmin && (
-                <td>
+                <td className="opacity-80">
                   {ticket.isViewedByAdmin ? "Viewed" : "Not Viewed"}
                 </td>
               )}
-
             </tr>
           ))}
         </tbody>

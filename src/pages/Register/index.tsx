@@ -32,9 +32,9 @@ const Index: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900">
-      <div className="w-full max-w-md bg-gray-800 rounded-lg shadow-lg p-8">
+      <div className="w-full max-w-md bg-[#162033] rounded-lg shadow-lg p-8">
         <div className="flex justify-center items-center">
-          <h2 className="text-2xl font-bold text-center">Sign up</h2>
+          <h2 className="text-2xl font-bold text-center text-white">Sign up</h2>
         </div>
 
         <FormInput
@@ -94,7 +94,7 @@ const Index: React.FC = () => {
           submitHandler={submitRegistrationFormHandler}
         />
 
-        <h5 className="text-center mt-4 text-sm">
+        <h5 className="text-center mt-4 text-sm text-white">
           Already have an account?{" "}
           <span
             onClick={() => navigate("/login")}

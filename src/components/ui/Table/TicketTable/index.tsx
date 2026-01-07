@@ -9,7 +9,7 @@ const TableWrapper = () => {
   if (loading) return <div>Loading tickets...</div>;
 
   return (
-    <div className="w-full h-full flex flex-col items-stretch justify-start px-6 pt-6">
+    <div className="w-full h-full flex flex-col items-stretch justify-start px-6 pt-6 text-white">
       <h1 className="text-xl font-bold mb-4">
         {isAdmin ? "All Tickets" : "My Tickets"}
       </h1>

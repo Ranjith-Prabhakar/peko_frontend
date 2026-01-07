@@ -18,7 +18,7 @@ const FormInput = ({
       <input
         type={type}
         placeholder={placeholder}
-        className={`w-full px-4 py-2 rounded bg-gray-700  outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        className={`w-full px-4 py-2 rounded bg-gray-700  text-white outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
         required
         value={state}
         onChange={handler}
