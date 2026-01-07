@@ -15,9 +15,9 @@ const CreateTicket = () => {
       const cats = await fetchCategories();
       if (cats) setCategories(cats);
     };
-
     loadCategories();
   }, []);
+
   const initialValues: TicketFormValues = {
     title: "",
     description: "",
@@ -27,109 +27,87 @@ const CreateTicket = () => {
 
   return (
     <div className="w-full flex justify-center px-4 pt-4">
-      <div className="w-full max-w-2xl bg-base-100 shadow-xl rounded-xl p-6">
+      <div className="w-full max-w-2xl shadow-xl rounded-xl p-6 bg-gray-900 border border-white/10 text-white">
         <h2 className="text-xl font-semibold mb-4">Create Ticket</h2>
 
         <Formik
           initialValues={initialValues}
           validationSchema={createTicketValidationSchema}
           validateOnMount
-         onSubmit={async (values, { resetForm, setSubmitting }) => {
-                  try {
-                    const { status, data } = await createTicket(values);
-                    console.log("Create ticket response:", status, data);
-                    if (status === 201) {
-                      toast.success(data.message || "Ticket created successfully");
-
-                      resetForm();
-                    }
-                  } catch (err) {
-                    toast.error("Failed to create ticket");
-                  } finally {
-                    setSubmitting(false);
-                  }
-                }}
+          onSubmit={async (values, { resetForm, setSubmitting }) => {
+            try {
+              const { status, data } = await createTicket(values);
+              if (status === 201) {
+                toast.success(data.message || "Ticket created successfully");
+                resetForm();
+              }
+            } catch (err) {
+              toast.error("Failed to create ticket");
+            } finally {
+              setSubmitting(false);
+            }
+          }}
         >
           {(formik) => (
             <form onSubmit={formik.handleSubmit} className="space-y-4">
+
               {/* Title */}
               <fieldset className="fieldset">
-                <legend className="fieldset-legend">Title</legend>
+                <legend className="fieldset-legend text-white">Title</legend>
                 <input
                   type="text"
-                  className={`input input-bordered ${
-                    formik.touched.title && formik.errors.title
-                      ? "input-error"
-                      : ""
+                  className={`input input-bordered w-full bg-gray-800 text-white placeholder-white/60 ${
+                    formik.touched.title && formik.errors.title ? "input-error" : ""
                   }`}
                   {...formik.getFieldProps("title")}
                   placeholder="Enter ticket title"
                 />
                 {formik.touched.title && formik.errors.title && (
-                  <p className="label text-error">
-                    {formik.errors.title}
-                  </p>
+                  <p className="label text-error">{formik.errors.title}</p>
                 )}
               </fieldset>
 
               {/* Description */}
               <fieldset className="fieldset">
-                <legend className="fieldset-legend">Description</legend>
+                <legend className="fieldset-legend text-white">Description</legend>
                 <textarea
                   rows={3}
-                  className={`textarea textarea-bordered ${
-                    formik.touched.description &&
-                    formik.errors.description
-                      ? "textarea-error"
-                      : ""
+                  className={`textarea textarea-bordered w-full bg-gray-800 text-white placeholder-white/60 ${
+                    formik.touched.description && formik.errors.description ? "textarea-error" : ""
                   }`}
                   {...formik.getFieldProps("description")}
                   placeholder="Describe the issue"
                 />
-                {formik.touched.description &&
-                  formik.errors.description && (
-                    <p className="label text-error">
-                      {formik.errors.description}
-                    </p>
-                  )}
+                {formik.touched.description && formik.errors.description && (
+                  <p className="label text-error">{formik.errors.description}</p>
+                )}
               </fieldset>
 
               {/* Category */}
               <fieldset className="fieldset">
-                <legend className="fieldset-legend">Category</legend>
+                <legend className="fieldset-legend text-white">Category</legend>
                 <select
-                  className={`select select-bordered ${
-                    formik.touched.categoryId && formik.errors.categoryId
-                      ? "select-error"
-                      : ""
+                  className={`select select-bordered w-full bg-gray-800 text-white placeholder-white/60 ${
+                    formik.touched.categoryId && formik.errors.categoryId ? "select-error" : ""
                   }`}
                   {...formik.getFieldProps("categoryId")}
                 >
-                  <option value="" disabled>
-                    Select category
-                  </option>
+                  <option value="" disabled>Select category</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
                   ))}
                 </select>
                 {formik.touched.categoryId && formik.errors.categoryId && (
-                  <p className="label text-error">
-                    {formik.errors.categoryId}
-                  </p>
+                  <p className="label text-error">{formik.errors.categoryId}</p>
                 )}
               </fieldset>
 
               {/* Priority */}
               <fieldset className="fieldset">
-                <legend className="fieldset-legend">Priority</legend>
+                <legend className="fieldset-legend text-white">Priority</legend>
                 <div className="flex gap-4">
                   {(["low", "medium", "high"] as const).map((level) => (
-                    <label
-                      key={level}
-                      className="flex items-center gap-2 cursor-pointer"
-                    >
+                    <label key={level} className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
                         name="priority"
@@ -142,11 +120,9 @@ const CreateTicket = () => {
                         }`}
                         value={level}
                         checked={formik.values.priority === level}
-                        onChange={() =>
-                          formik.setFieldValue("priority", level)
-                        }
+                        onChange={() => formik.setFieldValue("priority", level)}
                       />
-                      <span className="capitalize">{level}</span>
+                      <span className="capitalize text-white">{level}</span>
                     </label>
                   ))}
                 </div>
@@ -155,7 +131,7 @@ const CreateTicket = () => {
               {/* Submit */}
               <button
                 type="submit"
-                className="btn btn-primary w-full mt-2"
+                className="btn btn-primary w-full mt-2 bg-primary text-white"
                 disabled={!formik.isValid || formik.isSubmitting}
               >
                 Create Ticket

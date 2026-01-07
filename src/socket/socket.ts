@@ -43,6 +43,18 @@ export function connectSocket(accessToken: string) {
       store.dispatch(addStatusUpdate(payload))
     });
     
+    socket.on("user-message", (payload) => {
+      sound.play()
+      console.log("Admin notification:", payload);
+      store.dispatch(addStatusUpdate(payload))
+    });
+    
+    socket.on("admin-message", (payload) => {
+      sound.play()
+      console.log("Admin notification:", payload);
+      store.dispatch(addStatusUpdate(payload))
+    });
+    
     socket.on("connect_error", (err) => {
       console.error("Socket error:", err.message);
     });

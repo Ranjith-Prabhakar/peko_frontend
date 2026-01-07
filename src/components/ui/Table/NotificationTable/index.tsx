@@ -22,6 +22,10 @@ const NotificationTable = ({ notifications, role }: NotificationTableProps) => {
   }
 
   return (
+     <div className="w-full h-full flex flex-col items-stretch justify-start px-6 pt-6 text-white">
+      <h1 className="text-xl font-bold mb-4 ms-5">
+         Notifications 
+      </h1>
     <div className="overflow-x-auto min-h-[80vh] p-4">
       <table className="table table-sm border border-white/10 bg-gray-900 w-full">
         <thead className="text-white border-b border-white/20">
@@ -77,6 +81,7 @@ const NotificationTable = ({ notifications, role }: NotificationTableProps) => {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 };

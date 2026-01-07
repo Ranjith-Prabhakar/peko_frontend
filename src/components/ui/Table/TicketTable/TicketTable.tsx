@@ -7,6 +7,7 @@ export type Ticket = {
   priority: "low" | "medium" | "high";
   status: "open" | "in_progress" | "resolved" | "closed";
   isViewedByAdmin: boolean;
+  user:{id:number,name:string}
 };
 
 type Props = {
@@ -23,6 +24,7 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
         <thead className="text-white border-b border-white/20">
           <tr>
             <th>Id</th>
+            <th>Created By</th>
             <th>Title</th>
             <th>Description</th>
             <th>Priority</th>
@@ -51,7 +53,9 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
               "
             >
               <td className="opacity-80">{index + 1}</td>
-
+              <td className="font-medium text-white">
+                {ticket.user.name}
+              </td>
               <td className="font-medium text-white">
                 {ticket.title}
               </td>

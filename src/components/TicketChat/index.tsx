@@ -1,181 +1,108 @@
-// import { useEffect, useState } from "react";
-// import { useSelector } from "react-redux";
-// import type { RootState } from "../../store";
-// import { connectSocket, getSocket } from "../../socket/socket";
-// import type { TicketMessage } from "../../types/ticket";
-
-// interface TicketChatProps {
-//   ticketId: number;
-//   role: "admin" | "user";
-// }
-
-// const TicketChat = ({ ticketId, role }: TicketChatProps) => {
-//   const [messages, setMessages] = useState<TicketMessage[]>([]);
-//   const [input, setInput] = useState("");
-
-//   const { user, accessToken } = useSelector(
-//     (state: RootState) => state.auth
-//   );
-
-//   useEffect(() => {
-//     if (!accessToken) return;
-
-//     connectSocket(accessToken);
-//     const socket = getSocket();
-
-//     const handleMessage = (msg: TicketMessage & { ticketId: number }) => {
-//       if (msg.ticketId === ticketId) {
-//         setMessages((prev) => [...prev, msg]);
-//       }
-//     };
-
-//     socket.on("admin-message", handleMessage);
-//     socket.on("user-message", handleMessage);
-
-//     return () => {
-//       socket.off("admin-message", handleMessage);
-//       socket.off("user-message", handleMessage);
-//     };
-//   }, [ticketId, accessToken]);
-
-//   const sendMessage = () => {
-//     if (!input.trim() || !user) return;
-
-//     const payload: TicketMessage = {
-//       ticketId,
-//       message: input,
-//       senderId: user.id,
-//       senderName: user.name,
-//       createdAt: new Date().toISOString(),
-//     };
-
-//     const socket = getSocket();
-
-//     socket.emit(
-//       role === "admin" ? "admin-send-message" : "user-send-message",
-//       payload
-//     );
-
-//     setMessages((prev) => [...prev, payload]);
-//     setInput("");
-//   };
-
-//   return (
-//     <div className="card bg-base-100 shadow-xl flex flex-col">
-//       <div className="card-body flex flex-col h-full">
-//         <h3 className="font-semibold mb-2">Conversation</h3>
-
-//         <div className="flex-1 overflow-y-auto space-y-3 p-3 bg-base-200 rounded">
-//           {messages.map((msg, idx) => {
-//             const isOwn = msg.senderId === user?.id;
-
-//             return (
-//               <div
-//                 key={idx}
-//                 className={`chat ${isOwn ? "chat-end" : "chat-start"}`}
-//               >
-//                 <div
-//                   className={`chat-bubble ${
-//                     isOwn ? "chat-bubble-primary" : ""
-//                   }`}
-//                 >
-//                   {!isOwn && (
-//                     <div className="text-xs opacity-70 mb-1">
-//                       {msg.senderName}
-//                     </div>
-//                   )}
-//                   {msg.message}
-//                 </div>
-//               </div>
-//             );
-//           })}
-//         </div>
-
-//         <div className="mt-3 flex gap-2">
-//           <input
-//             type="text"
-//             placeholder="Type a message..."
-//             className="input input-bordered w-full"
-//             value={input}
-//             onChange={(e) => setInput(e.target.value)}
-//             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-//           />
-//           <button className="btn btn-primary" onClick={sendMessage}>
-//             Send
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TicketChat;
-
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { TicketMessage } from "../../types/ticket";
 import { fetchMessages } from "../../services/ticket/fetchMessages";
 import { socket } from "../../socket/socket";
-import useGetUser from "../../hooks/useGetUser";
 
 interface TicketChatProps {
   ticketId: number;
   currentUserId: number;
   currentUserName: string;
+  currentUserRole: "admin" | "user";
+  targetUserId?: number; // needed when admin replies
 }
 
 const TicketChat = ({
   ticketId,
   currentUserId,
   currentUserName,
+  currentUserRole,
+  targetUserId
 }: TicketChatProps) => {
+  console.log(  ticketId,
+  currentUserId,
+  currentUserName,
+  currentUserRole,targetUserId)
   const [messages, setMessages] = useState<TicketMessage[]>([]);
   const [input, setInput] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const user = useGetUser();
-
-  const toAddress = user?.role === "user" ? "role:admin" : `user:${user?.id}`;
-
+  // fetch messages for the first time
   useEffect(() => {
     async function getMessages() {
       try {
-        const fetchedMessages = await fetchMessages(ticketId);
-        console.log("Fetched messages:", fetchedMessages);
-           setMessages(fetchedMessages.data || []); 
-      } catch (error) {
-        console.error("Failed to fetch messages", error);
+        const fetched = await fetchMessages(ticketId);
+        setMessages(fetched.data || []);
+      } catch (err) {
+        console.error("Failed to fetch messages:", err);
       }
     }
-
     getMessages();
   }, [ticketId]);
 
+  // Scroll to bottom on new message
   useEffect(() => {
-    const handleIncomingMessage = (message: TicketMessage) => {
-      console.log("Received message via socket:", message);
-      setMessages((prev) => [...prev, message]);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  // Listen to incoming messages
+  useEffect(() => {
+    const handleUserMessage = (msg: TicketMessage) => {
+      if (msg.ticketId === ticketId) setMessages((prev) => [...prev, msg]);
     };
 
-    socket?.on("user-message-at-message-box", handleIncomingMessage);
+    const handleAdminMessage = (msg: TicketMessage) => {
+   
+      if (msg.ticketId === ticketId) setMessages((prev) => [...prev, msg]);
+    };
 
+    if(currentUserRole === "user"){
+      socket?.on("user-message-at-message-box", (msg)=>{
+            console.log("msg user------------->",msg)
+            setMessages((prev) => [...prev, msg])
+      });
+    }else{
+       socket?.on("admin-message-at-message-box", (msg)=>{
+           console.log("msg admin------------->",msg)
+           if(msg.ticketId === ticketId){
+             setMessages((prev) => [...prev, msg])
+           }
+           
+       });
+      
+
+    }
     return () => {
-      socket?.off("user-message-at-message-box", handleIncomingMessage);
+      socket?.off("user-message-at-message-box", handleUserMessage);
+      socket?.off("admin-message-at-message-box", handleAdminMessage);
     };
-  }, []);
+  }, [ticketId]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
 
+    console.log("insdi sendmsg")
     const newMessage: TicketMessage = {
       ticketId,
-      message: input,
       senderId: currentUserId,
       senderName: currentUserName,
+      message: input,
       createdAt: new Date().toISOString(),
     };
 
+   
     setMessages((prev) => [...prev, newMessage]);
     setInput("");
 
+
+    let toAddress = "";
+    if (currentUserRole === "user") {
+      toAddress = "role:admin";
+    } else {
+      if (!targetUserId) return;
+      toAddress = `user:${targetUserId}`;
+    }
+
+    console.log("reached emit")
     socket?.emit("message-to-server-from-client-to-peer", {
       toAddress,
       message: newMessage,
@@ -183,14 +110,14 @@ const TicketChat = ({
   };
 
   return (
-    <div className="card bg-base-100 shadow-xl flex flex-col h-full">
+    <div className="card bg-gray-900 border border-white/10 rounded-lg shadow-xl flex flex-col h-full">
       <div className="card-body flex flex-col h-full">
-        <h3 className="font-semibold mb-2">Conversation</h3>
+        <h3 className="font-semibold mb-2 text-white text-center text-xl">Conversation</h3>
 
-        {/* Chat Messages */}
-        <div className="flex-1 overflow-y-auto space-y-3 p-3 bg-base-200 rounded">
+        {/* Messages */}
+        <div className="flex-1 overflow-y-scroll space-y-3 p-3 bg-gray-800 rounded max-h-[68vh]">
           {messages.length === 0 && (
-            <div className="text-center text-sm opacity-60">
+            <div className="text-center text-sm opacity-50 text-white">
               No messages yet
             </div>
           )}
@@ -205,11 +132,11 @@ const TicketChat = ({
               >
                 <div
                   className={`chat-bubble ${
-                    isOwn ? "chat-bubble-primary" : ""
+                    isOwn ? "chat-bubble-primary" : "bg-gray-700 text-white"
                   }`}
                 >
                   {!isOwn && (
-                    <div className="text-xs opacity-70 mb-1">
+                    <div className="text-xs opacity-70 mb-1 text-white">
                       {msg.senderName}
                     </div>
                   )}
@@ -218,6 +145,8 @@ const TicketChat = ({
               </div>
             );
           })}
+
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input */}
@@ -225,7 +154,7 @@ const TicketChat = ({
           <input
             type="text"
             placeholder="Type a message..."
-            className="input input-bordered w-full"
+            className="input input-bordered w-full bg-gray-700 text-white border-white/30"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
