@@ -8,6 +8,7 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 import SocketProvider from "./providers/SocketProvider";
 
 (async () => {
+  console.log( import.meta.env.VITE_API_BASE_URL as string)
   await ensureAccessToken();
   createRoot(document.getElementById("root")!).render(
     <Provider store={store}>

@@ -71,7 +71,7 @@ const TicketDetails = ({ role, ticket: initialTicket }: TicketDetailsProps) => {
   return (
 
 <>
-        <div className="flex max-h-[90vh] w-[85vw] h-full overflow-scroll gap-4 ">
+        <div className="flex max-h-[90vh] w-[80vw] h-full overflow-scroll gap-4 ">
           
       <LeftSideBox
           ticket={ticket}
