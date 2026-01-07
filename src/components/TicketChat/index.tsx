@@ -103,13 +103,12 @@ const TicketChat = ({
   };
 
   return (
-    <div className="card bg-gray-900 border border-white/10 rounded-lg shadow-xl flex flex-col h-full">
+    <div className="card bg-gray-900 border border-white/10 rounded-lg shadow-xl flex flex-col flex-1 h-full">
       <div className="card-body flex flex-col h-full">
         <h3 className="font-semibold mb-2 text-white text-center text-xl">
           Conversation
         </h3>
 
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto space-y-3 p-3 bg-gray-800 rounded">
           {messages.length === 0 && (
             <div className="text-center text-sm opacity-50 text-white">
@@ -146,7 +145,6 @@ const TicketChat = ({
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
         <div className="mt-3 flex gap-2">
           <input
             type="text"

@@ -8,6 +8,7 @@ export type Ticket = {
   status: "open" | "in_progress" | "resolved" | "closed";
   isViewedByAdmin: boolean;
   user:{id:number,name:string}
+  createdAt:string
 };
 
 type Props = {
@@ -19,8 +20,8 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
   const navigate = useNavigate();
 
   return (
-    <div className="overflow-x-auto min-h-[70vh] p-4">
-      <table className="table table-sm border border-white/10 bg-gray-900">
+    <div className="overflow-x-auto min-h-[70vh] ">
+      <table className="table table-sm border border-white/10 bg-gray-900 p-4">
         <thead className="text-white border-b border-white/20">
           <tr>
             <th>Id</th>
@@ -28,6 +29,7 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
             <th>Title</th>
             <th>Description</th>
             <th>Priority</th>
+            <th>Created At</th>
             <th>Status</th>
             {isAdmin && <th>Viewed</th>}
           </tr>
@@ -78,6 +80,10 @@ const TicketTable = ({ tickets, isAdmin }: Props) => {
                 </span>
               </td>
 
+
+              <td className="capitalize opacity-80">
+                {ticket.createdAt.split("T")[0]}
+              </td>
               <td className="capitalize opacity-80">
                 {ticket.status.replace("_", " ")}
               </td>

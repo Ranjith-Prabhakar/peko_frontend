@@ -7,6 +7,7 @@ export const fetchTicket = async (page: number) => {
       requiresAuth: true
     });
 
+    console.log("response",response)
     return response.data; 
   } catch (error) {
     console.error("Failed to fetch tickets:", error);

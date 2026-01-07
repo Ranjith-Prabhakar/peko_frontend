@@ -26,7 +26,7 @@ const CreateTicket = () => {
   };
 
   return (
-    <div className="w-full flex justify-center px-4 pt-4">
+    <div className="w-full flex justify-center px-4 pt-4 mt-20">
       <div className="w-full max-w-2xl shadow-xl rounded-xl p-6 bg-gray-900 border border-white/10 text-white">
         <h2 className="text-xl font-semibold mb-4">Create Ticket</h2>
 
@@ -51,7 +51,6 @@ const CreateTicket = () => {
           {(formik) => (
             <form onSubmit={formik.handleSubmit} className="space-y-4">
 
-              {/* Title */}
               <fieldset className="fieldset">
                 <legend className="fieldset-legend text-white">Title</legend>
                 <input
@@ -67,7 +66,7 @@ const CreateTicket = () => {
                 )}
               </fieldset>
 
-              {/* Description */}
+             
               <fieldset className="fieldset">
                 <legend className="fieldset-legend text-white">Description</legend>
                 <textarea
@@ -83,7 +82,6 @@ const CreateTicket = () => {
                 )}
               </fieldset>
 
-              {/* Category */}
               <fieldset className="fieldset">
                 <legend className="fieldset-legend text-white">Category</legend>
                 <select
@@ -102,7 +100,7 @@ const CreateTicket = () => {
                 )}
               </fieldset>
 
-              {/* Priority */}
+            
               <fieldset className="fieldset">
                 <legend className="fieldset-legend text-white">Priority</legend>
                 <div className="flex gap-4">
@@ -128,7 +126,7 @@ const CreateTicket = () => {
                 </div>
               </fieldset>
 
-              {/* Submit */}
+              
               <button
                 type="submit"
                 className="btn btn-primary w-full mt-2 bg-primary text-white"
